@@ -38,7 +38,7 @@
     "url": "git+https://github.com/DAVFoundation/ride-hailing-api.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/DAVFoundation/ride-hailing-api/issues"
   },
