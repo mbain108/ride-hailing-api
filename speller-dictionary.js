@@ -18,4 +18,5 @@ module.exports = [
   'rx',
   'sdk',
   'lon',
+  'SMS',
 ];
