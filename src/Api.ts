@@ -25,5 +25,6 @@ export default class Api {
     this.server.get('/', statsController.getInfo);
     this.server.get('/health', statsController.getInfo);
     this.server.post('/sms', registrationController.sendSMS);
+    this.server.get('/verify-code', registrationController.verifyCode);
   }
 }
