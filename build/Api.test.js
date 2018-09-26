@@ -18,13 +18,13 @@ describe('baseRoute', () => {
     it('should be json', () => {
         // TODO: Prefer using async/await syntax over return Promise
         return chai.request(api.server).get('/')
-            .then((res) => {
+            .then(res => {
             expect(res.type).to.eql('application/json');
         });
     });
     it('should have a message prop', () => {
         return chai.request(api.server).get('/')
-            .then((res) => {
+            .then(res => {
             expect(res.body.message).to.eql('Ride Hailing API');
         });
     });
