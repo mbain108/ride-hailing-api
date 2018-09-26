@@ -4,7 +4,12 @@
   "description": "Ride Hailing API",
   "main": "src/index.ts",
   "dependencies": {
-    "restify": "^7.2.1"
+    "@types/cassandra-driver": "^3.4.0",
+    "@types/retry": "^0.10.2",
+    "cassandra-driver": "^3.5.0",
+    "dav-js": "DAVFoundation/dav-js",
+    "restify": "^7.2.1",
+    "retry": "^0.12.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
