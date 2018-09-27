@@ -1,4 +1,5 @@
-import { Request, Response} from 'restify';
+import { Request, Response } from 'restify';
+import * as Drivers from '../cassandra/drivers';
 
 export default class RegistrationController {
 
@@ -12,7 +13,18 @@ export default class RegistrationController {
     const code = request.query.code;
     response.send(200, {
       verified: true,
-    }, {contentType: 'application/json'});
+    }, { contentType: 'application/json' });
+  }
+
+  public async foo() {
+    const drivers = await Drivers.list();
+    await Promise.all(drivers.map(driver1 => {
+      // tslint:disable-next-line:no-console
+      console.log(driver1.email);
+    }));
+    const driver = await Drivers.findById('123');
+    driver.email = '';
+    await Drivers.update(driver);
   }
 
   public insertDriverDetails(request: Request, response: Response) {
