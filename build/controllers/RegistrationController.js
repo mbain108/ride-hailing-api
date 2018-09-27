@@ -12,5 +12,10 @@ class RegistrationController {
             verified: true,
         }, { contentType: 'application/json' });
     }
+    insertDriverDetails(request, response) {
+        response.send(200, {
+            message: `Got driver details`,
+        });
+    }
 }
 exports.default = RegistrationController;

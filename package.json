@@ -4,7 +4,9 @@
   "description": "Ride Hailing API",
   "main": "src/index.ts",
   "dependencies": {
-    "restify": "^7.2.1"
+    "@types/restify-cors-middleware": "^1.0.1",
+    "restify": "^7.2.1",
+    "restify-cors-middleware": "^1.1.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
