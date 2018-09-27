@@ -7,20 +7,12 @@ class RegistrationController {
             message: `Ride Hailing api sent sms to ${request.query.phoneNumber}`,
         });
     }
-
     verifyCode(request, response) {
         const code = request.query.code;
         response.send(200, {
             verified: true,
         }, { contentType: 'application/json' });
     }
-    
-    insertDriverDetails(request, response) {
-        response.send(200, {
-            message: `Got driver details`,
-        });
-    }    
-
     async foo() {
         const drivers = await Drivers.list();
         await Promise.all(drivers.map(driver1 => {
@@ -30,6 +22,11 @@ class RegistrationController {
         const driver = await Drivers.findById('123');
         driver.email = '';
         await Drivers.update(driver);
+    }
+    insertDriverDetails(request, response) {
+        response.send(200, {
+            message: `Got driver details`,
+        });
     }
 }
 exports.default = RegistrationController;

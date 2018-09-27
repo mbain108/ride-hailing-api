@@ -16,7 +16,7 @@ export default class RegistrationController {
     }, { contentType: 'application/json' });
   }
 
-  public async foo() {
+  public async function() {
     const drivers = await Drivers.list();
     await Promise.all(drivers.map(driver1 => {
       // tslint:disable-next-line:no-console
