@@ -13,7 +13,7 @@ class RegistrationController {
             verified: true,
         }, { contentType: 'application/json' });
     }
-    async foo() {
+    async function() {
         const drivers = await Drivers.list();
         await Promise.all(drivers.map(driver1 => {
             // tslint:disable-next-line:no-console

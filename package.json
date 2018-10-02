@@ -4,9 +4,11 @@
   "description": "Ride Hailing API",
   "main": "src/index.ts",
   "dependencies": {
+    "@types/bcrypt": "^2.0.0",
     "@types/cassandra-driver": "^3.4.0",
     "@types/restify-cors-middleware": "^1.0.1",
     "@types/retry": "^0.10.2",
+    "bcrypt": "^3.0.1",
     "cassandra-driver": "^3.5.0",
     "dav-js": "DAVFoundation/dav-js",
     "passport": "^0.4.0",
@@ -38,7 +40,7 @@
   },
   "scripts": {
     "preinstall": "cp ./.githooks/* .git/hooks",
-    "start": "ts-node ./src/index.ts",
+    "start": "CASSANDRA_KEYSPACE=ride_hailing ts-node ./src/index.ts",
     "tslint": "gulp tslint",
     "tsc": "gulp tsc",
     "jest": "gulp jest",
