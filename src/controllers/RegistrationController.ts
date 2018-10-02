@@ -1,5 +1,60 @@
 import { Request, Response } from 'restify';
+import * as bcrypt from 'bcrypt';
 import * as Drivers from '../cassandra/drivers';
+import { IDriver } from '../cassandra/drivers';
+import { v4 } from 'uuid';
+
+const saltRounds = 10;
+
+interface IDriverDetails {
+  phoneNumber: string;
+  profilePhotoId: string;
+  licensePhotoId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  companyName: string;
+  vatNumber: string;
+  address: string;
+  make: string;
+  model: string;
+  year: string;
+  licensePlate: string;
+  vehicleColor: string;
+}
+
+const createDriver = (driverDetails: IDriverDetails): IDriver => {
+  const driver: IDriver = {
+    id: null,
+    createdAt: null,
+    createdFrom: null,
+    email: driverDetails.email,
+    emailConfirmed: null,
+    password: driverDetails.password,
+    phoneNumber: driverDetails.phoneNumber,
+    phoneConfirmed: null,
+    firstName: driverDetails.firstName,
+    lastName: driverDetails.lastName,
+    // shouldn't be company city
+    city: null, // driverDetails.city,
+    companyName: driverDetails.companyName,
+    vatNumber: driverDetails.vatNumber,
+    companyAddress: driverDetails.address,
+    companyCity: null, // driverDetails.city,
+    vehicleMake: driverDetails.make,
+    vehicleModel: driverDetails.model,
+    vehicleYear: null, // driverDetails.year,
+    vehiclePlateNumber: driverDetails.licensePlate,
+    vehicleColor: driverDetails.vehicleColor,
+    profileImageUrl: driverDetails.profilePhotoId,
+    licenseImageUrl: driverDetails.licensePhotoId,
+    vehicleImageUrl: null,
+    davId: null,
+    privateKey: null,
+  };
+  return driver;
+};
 
 export default class RegistrationController {
 
@@ -27,7 +82,19 @@ export default class RegistrationController {
     await Drivers.update(driver);
   }
 
-  public insertDriverDetails(request: Request, response: Response) {
+  public async insertDriverDetails(request: Request, response: Response) {
+    const driverDetails: IDriverDetails = request.body;
+    await new Promise((resolve, reject) => bcrypt.hash(driverDetails.password, saltRounds, (err, hash) => {
+      if (err) {
+        reject(err);
+      } else {
+        driverDetails.password = hash;
+        resolve();
+      }
+    }));
+    const driver = createDriver(driverDetails);
+    driver.id = v4();
+    Drivers.insert(driver);
     response.send(200, {
       message: `Got driver details`,
     });
