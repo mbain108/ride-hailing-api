@@ -8,7 +8,9 @@
     "@types/retry": "^0.10.2",
     "cassandra-driver": "^3.5.0",
     "dav-js": "DAVFoundation/dav-js",
+    "@types/restify-cors-middleware": "^1.0.1",
     "restify": "^7.2.1",
+    "restify-cors-middleware": "^1.1.1",
     "retry": "^0.12.0"
   },
   "devDependencies": {

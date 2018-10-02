@@ -19,4 +19,6 @@ module.exports = [
   'sdk',
   'lon',
   'SMS',
+  'cors',
+  'keyspace',
 ];

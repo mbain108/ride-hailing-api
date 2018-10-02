@@ -23,5 +23,10 @@ class RegistrationController {
         driver.email = '';
         await Drivers.update(driver);
     }
+    insertDriverDetails(request, response) {
+        response.send(200, {
+            message: `Got driver details`,
+        });
+    }
 }
 exports.default = RegistrationController;

@@ -16,7 +16,7 @@ export default class RegistrationController {
     }, { contentType: 'application/json' });
   }
 
-  public async foo() {
+  public async function() {
     const drivers = await Drivers.list();
     await Promise.all(drivers.map(driver1 => {
       // tslint:disable-next-line:no-console
@@ -25,5 +25,11 @@ export default class RegistrationController {
     const driver = await Drivers.findById('123');
     driver.email = '';
     await Drivers.update(driver);
+  }
+
+  public insertDriverDetails(request: Request, response: Response) {
+    response.send(200, {
+      message: `Got driver details`,
+    });
   }
 }
