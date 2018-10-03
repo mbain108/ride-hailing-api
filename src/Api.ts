@@ -3,6 +3,7 @@ import corsMiddleware = require('restify-cors-middleware');
 import StatsController from './controllers/StatsController';
 import RegistrationController from './controllers/RegistrationController';
 import PersonalDetailsController from './controllers/PersonalDetailsController';
+import { isAuthenticated } from './lib/passport';
 
 export default class Api {
 
@@ -33,7 +34,7 @@ export default class Api {
     this.server.get('/health', statsController.getInfo);
     this.server.post('/sms', registrationController.sendSMS);
     this.server.get('/verify-code', registrationController.verifyCode);
-    this.server.put('/update-personal-details', personalDetailsController.update);
+    this.server.put('/update-personal-details', isAuthenticated, personalDetailsController.update);
     this.server.post('/driver-details', registrationController.insertDriverDetails);
   }
 }
