@@ -73,9 +73,9 @@ passport.use('local.signin', new LocalStrategy({ usernameField: 'email' }, async
 /**
  * Login Required middleware.
  */
-export function isAuthenticated(req: IRequestWithAuthentication, res: Response, next: Next) {
-  if (req.isAuthenticated()) {
+export function isAuthenticated(request: IRequestWithAuthentication, response: Response, next: Next) {
+  if (request.isAuthenticated()) {
     return next();
   }
-  res.redirect('/login', next);
+  response.redirect('/login', next);
 }
