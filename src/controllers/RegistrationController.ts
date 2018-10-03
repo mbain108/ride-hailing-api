@@ -17,6 +17,7 @@ interface IDriverDetails {
   companyName: string;
   vatNumber: string;
   address: string;
+  city: string;
   make: string;
   model: string;
   year: string;
@@ -26,25 +27,23 @@ interface IDriverDetails {
 
 const createDriver = (driverDetails: IDriverDetails): IDriver => {
   const driver: IDriver = {
-    id: null,
-    createdAt: null,
-    createdFrom: null,
+    id: v4(),
     email: driverDetails.email,
-    emailConfirmed: null,
+    emailConfirmed: false,
     password: driverDetails.password,
     phoneNumber: driverDetails.phoneNumber,
-    phoneConfirmed: null,
+    phoneConfirmed: true,
     firstName: driverDetails.firstName,
     lastName: driverDetails.lastName,
     // shouldn't be company city
-    city: null, // driverDetails.city,
+    city: driverDetails.city,
     companyName: driverDetails.companyName,
     vatNumber: driverDetails.vatNumber,
     companyAddress: driverDetails.address,
-    companyCity: null, // driverDetails.city,
+    companyCity: driverDetails.city,
     vehicleMake: driverDetails.make,
     vehicleModel: driverDetails.model,
-    vehicleYear: null, // driverDetails.year,
+    vehicleYear: parseInt(driverDetails.year, 10),
     vehiclePlateNumber: driverDetails.licensePlate,
     vehicleColor: driverDetails.vehicleColor,
     profileImageUrl: driverDetails.profilePhotoId,
@@ -93,7 +92,8 @@ export default class RegistrationController {
       }
     }));
     const driver = createDriver(driverDetails);
-    driver.id = v4();
+    driver.createdFrom = request.connection.remoteAddress;
+    console.log(driver.createdFrom);
     Drivers.insert(driver);
     response.send(200, {
       message: `Got driver details`,

@@ -70,8 +70,8 @@ export function insert(driver: IDriver): Promise<void> {
         email_confirmed,password,phone_number,phone_confirmed,first_name,last_name,city,company_name,vat_number,
         company_address,company_city,vehicle_make,vehicle_model,vehicle_year,vehicle_plate_number,
         vehicle_color,profile_image_id,license_image_id,vehicle_image_id,dav_id,private_key)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`, [
-            driver.id, driver.createdAt, driver.createdFrom, driver.email, driver.emailConfirmed, driver.password, driver.phoneNumber,
+    VALUES (?,dateof(now()),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`, [
+            driver.id, driver.createdFrom, driver.email, driver.emailConfirmed, driver.password, driver.phoneNumber,
             driver.phoneConfirmed, driver.firstName, driver.lastName, driver.city, driver.companyName, driver.vatNumber,
             driver.companyAddress, driver.companyCity, driver.vehicleMake, driver.vehicleModel, driver.vehicleYear,
             driver.vehiclePlateNumber, driver.vehicleColor, driver.profileImageUrl, driver.licenseImageUrl, driver.vehicleImageUrl,
