@@ -93,7 +93,6 @@ export default class RegistrationController {
     }));
     const driver = createDriver(driverDetails);
     driver.createdFrom = request.connection.remoteAddress;
-    console.log(driver.createdFrom);
     Drivers.insert(driver);
     response.send(200, {
       message: `Got driver details`,
