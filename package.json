@@ -8,6 +8,7 @@
     "@types/cassandra-driver": "^3.4.0",
     "@types/restify-cors-middleware": "^1.0.1",
     "@types/retry": "^0.10.2",
+    "authy": "^1.4.0",
     "bcrypt": "^3.0.1",
     "cassandra-driver": "^3.5.0",
     "dav-js": "DAVFoundation/dav-js",

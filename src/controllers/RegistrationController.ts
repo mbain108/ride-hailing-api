@@ -5,6 +5,11 @@ import { IDriver } from '../cassandra/drivers';
 import { v4 } from 'uuid';
 import * as passport from 'passport';
 
+const TWILIO_INVALID_VERIFICATION_CODE = '60022';
+const TWILIO_API_KEY = process.env.TWILIO_API_KEY;
+
+// tslint:disable-next-line:no-var-requires
+const authy = require('authy')(TWILIO_API_KEY);
 const saltRounds = 10;
 
 interface IDriverDetails {
@@ -59,16 +64,36 @@ const createDriver = (driverDetails: IDriverDetails): IDriver => {
 export default class RegistrationController {
 
   public sendSMS(request: Request, response: Response) {
-    response.send(200, {
-      message: `Ride Hailing api sent sms to ${request.query.phoneNumber}`,
+    authy.phones().verification_start(request.query.phoneNumber, request.query.countryCode,
+      { via: 'sms', locale: 'en', code_length: '4' }, (err: any, res: any) => {
+      if (err) {
+        response.send(500, err);
+      } else {
+        response.send(200, {
+          message: `Ride Hailing api sent sms to ${request.query.phoneNumber}`,
+        });
+      }
     });
   }
 
   public verifyCode(request: Request, response: Response) {
-    const code = request.query.code;
-    response.send(200, {
-      verified: true,
-    }, { contentType: 'application/json' });
+    authy.phones().verification_check(request.query.phoneNumber, request.query.countryCode, request.query.verificationCode,
+      (err: any, res: any) => {
+        console.log(response);
+        if (err) {
+          if (err.error_code === TWILIO_INVALID_VERIFICATION_CODE) {
+            response.send(200, {
+              verified: false,
+            }, { contentType: 'application/json' });
+          } else {
+            response.send(500, err);
+          }
+        } else {
+          response.send(200, {
+            verified: true,
+          }, { contentType: 'application/json' });
+        }
+    });
   }
 
   public async function() {
