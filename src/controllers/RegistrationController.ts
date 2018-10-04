@@ -79,7 +79,6 @@ export default class RegistrationController {
   public verifyCode(request: Request, response: Response) {
     authy.phones().verification_check(request.query.phoneNumber, request.query.countryCode, request.query.verificationCode,
       (err: any, res: any) => {
-        console.log(response);
         if (err) {
           if (err.error_code === TWILIO_INVALID_VERIFICATION_CODE) {
             response.send(200, {
