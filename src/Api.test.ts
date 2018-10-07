@@ -10,6 +10,7 @@ describe('baseRoute', () => {
   let api: Api;
 
   beforeAll(() => {
+    process.env.TWILIO_API_KEY = 'apiKey';
     api = new Api();
   });
 

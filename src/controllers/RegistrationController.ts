@@ -8,8 +8,6 @@ import * as passport from 'passport';
 const TWILIO_INVALID_VERIFICATION_CODE = '60022';
 const TWILIO_API_KEY = process.env.TWILIO_API_KEY;
 
-// tslint:disable-next-line:no-var-requires
-const authy = require('authy')(TWILIO_API_KEY);
 const saltRounds = 10;
 
 interface IDriverDetails {
@@ -63,8 +61,14 @@ const createDriver = (driverDetails: IDriverDetails): IDriver => {
 
 export default class RegistrationController {
 
+  private _authy: any;
+
+  constructor() {
+    this._authy = require('authy')(TWILIO_API_KEY);
+  }
+
   public sendSMS(request: Request, response: Response) {
-    authy.phones().verification_start(request.query.phoneNumber, request.query.countryCode,
+    this._authy.phones().verification_start(request.query.phoneNumber, request.query.countryCode,
       { via: 'sms', locale: 'en', code_length: '4' }, (err: any, res: any) => {
       if (err) {
         response.send(500, err);
@@ -77,7 +81,7 @@ export default class RegistrationController {
   }
 
   public verifyCode(request: Request, response: Response) {
-    authy.phones().verification_check(request.query.phoneNumber, request.query.countryCode, request.query.verificationCode,
+    this._authy.phones().verification_check(request.query.phoneNumber, request.query.countryCode, request.query.verificationCode,
       (err: any, res: any) => {
         if (err) {
           if (err.error_code === TWILIO_INVALID_VERIFICATION_CODE) {
