@@ -36,9 +36,9 @@ export default class Api {
     this.server.use(plugins.bodyParser());
     this.server.get('/', statsController.getInfo);
     this.server.get('/health', statsController.getInfo);
-    this.server.post('/sms', registrationController.sendSMS);
-    this.server.get('/verify-code', registrationController.verifyCode);
+    this.server.post('/sms', registrationController.sendSMS.bind(registrationController));
+    this.server.get('/verify-code', registrationController.verifyCode.bind(registrationController));
     this.server.put('/update-personal-details', isAuthenticated, personalDetailsController.update);
-    this.server.post('/driver-details', registrationController.insertDriverDetails);
+    this.server.post('/driver-details', registrationController.insertDriverDetails.bind(registrationController));
   }
 }

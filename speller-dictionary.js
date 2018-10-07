@@ -1,4 +1,5 @@
 module.exports = [
+  'authy',
   'params',
   'ttl',
   'json',
