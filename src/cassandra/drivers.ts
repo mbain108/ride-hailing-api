@@ -28,6 +28,14 @@ export interface IDriver {
   privateKey?: Buffer;
 }
 
+export interface IPersonalDetails {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  city: string;
+}
+
 export function list(): Promise<IDriver[]> {
   return getClient().execute('', {}, {}).then(r => []);
 }
@@ -66,9 +74,9 @@ export function findById(id: string): Promise<IDriver> {
 }
 
 export function findByEmail(email: string): Promise<IDriver> {
-  return getClient().execute(`SELECT * from ${keyspace}.drivers WHERE email=?`, [email], { prepare: true }).then((res): IDriver => {
+  return getClient().execute(`SELECT * from ${keyspace}.drivers_email WHERE email=?`, [email], { prepare: true }).then((res): IDriver => {
     const first = res.first();
-    return {
+    return first ? {
       id: first.id,
       createdAt: first.created_at,
       createdFrom: first.created_from,
@@ -94,7 +102,7 @@ export function findByEmail(email: string): Promise<IDriver> {
       vehicleImageUrl: first.vehicle_image_id,
       davId: first.dav_id,
       privateKey: first.private_key,
-    };
+    } : null;
   });
 }
 
@@ -121,5 +129,22 @@ export function update(driver: IDriver): Promise<void> {
       // TODO: Add all other fields
     ].filter(s => !!s).join(',')}
         WHERE id=${driver.id};`)
+    .then(res => {/**/ });
+}
+
+export function updatePersonalDetails(personalDetails: IPersonalDetails): Promise<void> {
+  return getClient().execute(`UPDATE ${keyspace}.drivers SET
+      email = ?,
+      first_name = ?,
+      last_name = ?,
+      city = ?
+    WHERE id = ?;`,
+    [
+      personalDetails.email,
+      personalDetails.firstName,
+      personalDetails.lastName,
+      personalDetails.city,
+      personalDetails.id,
+    ])
     .then(res => {/**/ });
 }
