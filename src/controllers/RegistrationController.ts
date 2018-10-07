@@ -29,42 +29,42 @@ interface IDriverDetails {
   vehicleColor: string;
 }
 
-const createDriver = (driverDetails: IDriverDetails): IDriver => {
-  const driver: IDriver = {
-    id: v4(),
-    email: driverDetails.email,
-    emailConfirmed: false,
-    password: driverDetails.password,
-    phoneNumber: driverDetails.phoneNumber,
-    phoneConfirmed: true,
-    firstName: driverDetails.firstName,
-    lastName: driverDetails.lastName,
-    // shouldn't be company city
-    city: driverDetails.city,
-    companyName: driverDetails.companyName,
-    vatNumber: driverDetails.vatNumber,
-    companyAddress: driverDetails.address,
-    companyCity: driverDetails.city,
-    vehicleMake: driverDetails.make,
-    vehicleModel: driverDetails.model,
-    vehicleYear: parseInt(driverDetails.year, 10),
-    vehiclePlateNumber: driverDetails.licensePlate,
-    vehicleColor: driverDetails.vehicleColor,
-    profileImageUrl: driverDetails.profilePhotoId,
-    licenseImageUrl: driverDetails.licensePhotoId,
-    vehicleImageUrl: null,
-    davId: null,
-    privateKey: null,
-  };
-  return driver;
-};
-
 export default class RegistrationController {
 
   private _authy: any;
 
   constructor() {
     this._authy = require('authy')(TWILIO_API_KEY);
+  }
+
+  private createDriver(driverDetails: IDriverDetails): IDriver {
+    const driver: IDriver = {
+      id: v4(),
+      email: driverDetails.email,
+      emailConfirmed: false,
+      password: driverDetails.password,
+      phoneNumber: driverDetails.phoneNumber,
+      phoneConfirmed: true,
+      firstName: driverDetails.firstName,
+      lastName: driverDetails.lastName,
+      // shouldn't be company city
+      city: driverDetails.city,
+      companyName: driverDetails.companyName,
+      vatNumber: driverDetails.vatNumber,
+      companyAddress: driverDetails.address,
+      companyCity: driverDetails.city,
+      vehicleMake: driverDetails.make,
+      vehicleModel: driverDetails.model,
+      vehicleYear: parseInt(driverDetails.year, 10),
+      vehiclePlateNumber: driverDetails.licensePlate,
+      vehicleColor: driverDetails.vehicleColor,
+      profileImageUrl: driverDetails.profilePhotoId,
+      licenseImageUrl: driverDetails.licensePhotoId,
+      vehicleImageUrl: null,
+      davId: null,
+      privateKey: null,
+    };
+    return driver;
   }
 
   public sendSMS(request: Request, response: Response) {
@@ -120,7 +120,7 @@ export default class RegistrationController {
         resolve();
       }
     }));
-    const driver = createDriver(driverDetails);
+    const driver = this.createDriver(driverDetails);
     driver.id = v4();
     driver.createdFrom = request.connection.remoteAddress;
     passport.authenticate('local.signup', (err, driverVerified, meta) => {
