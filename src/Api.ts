@@ -5,6 +5,7 @@ import RegistrationController from './controllers/RegistrationController';
 import PersonalDetailsController from './controllers/PersonalDetailsController';
 import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from './lib/auth';
 import * as passport from 'passport';
+import AccountController from './controllers/AccountController';
 
 export default class Api {
 
@@ -19,6 +20,7 @@ export default class Api {
     const statsController = new StatsController();
     const registrationController = new RegistrationController();
     const personalDetailsController = new PersonalDetailsController();
+    const accountController = new AccountController();
 
     const cors = corsMiddleware({
       origins: ['*'],
@@ -40,5 +42,6 @@ export default class Api {
     this.server.get('/verify-code', registrationController.verifyCode.bind(registrationController));
     this.server.put('/update-personal-details', isAuthenticated, personalDetailsController.update);
     this.server.post('/driver-details', registrationController.insertDriverDetails.bind(registrationController));
+    this.server.post('/driver-sign-in', accountController.authenticateDriver.bind(accountController));
   }
 }
