@@ -6,6 +6,7 @@ import { v4 } from 'uuid';
 import * as passport from 'passport';
 
 const TWILIO_INVALID_VERIFICATION_CODE = '60022';
+const TWILIO_EXPIRED_VERIFICATION_CODE = '60023';
 const TWILIO_API_KEY = process.env.TWILIO_API_KEY;
 
 const saltRounds = 10;
@@ -84,12 +85,21 @@ export default class RegistrationController {
     this._authy.phones().verification_check(request.query.phoneNumber, request.query.countryCode, request.query.verificationCode,
       (err: any, res: any) => {
         if (err) {
-          if (err.error_code === TWILIO_INVALID_VERIFICATION_CODE) {
-            response.send(200, {
-              verified: false,
-            }, { contentType: 'application/json' });
-          } else {
-            response.send(500, err);
+          switch (err.error_code) {
+            case TWILIO_INVALID_VERIFICATION_CODE: {
+              response.send(200, {
+                verified: false,
+              }, { contentType: 'application/json' });
+            }
+                                                   break;
+            case TWILIO_EXPIRED_VERIFICATION_CODE: {
+              response.send(200, {
+                verified: false,
+                expired: true,
+              }, { contentType: 'application/json' });
+            }
+                                                   break;
+            default: response.send(500, err);
           }
         } else {
           response.send(200, {
