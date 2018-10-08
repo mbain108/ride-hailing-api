@@ -2,7 +2,7 @@ import { createServer, Server, plugins, Request, Response, Next, RequestHandler,
 import corsMiddleware = require('restify-cors-middleware');
 import StatsController from './controllers/StatsController';
 import RegistrationController from './controllers/RegistrationController';
-import PersonalDetailsController from './controllers/PersonalDetailsController';
+import AccountController from './controllers/AccountController';
 import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from './lib/auth';
 import * as passport from 'passport';
 
@@ -18,11 +18,11 @@ export default class Api {
 
     const statsController = new StatsController();
     const registrationController = new RegistrationController();
-    const personalDetailsController = new PersonalDetailsController();
+    const accountController = new AccountController();
 
     const cors = corsMiddleware({
       origins: ['*'],
-      allowHeaders: ['Content-Type'],
+      allowHeaders: ['Content-Type', 'Authorization'],
       exposeHeaders: ['Content-Type'],
     });
 
@@ -38,7 +38,8 @@ export default class Api {
     this.server.get('/health', statsController.getInfo);
     this.server.post('/sms', registrationController.sendSMS.bind(registrationController));
     this.server.get('/verify-code', registrationController.verifyCode.bind(registrationController));
-    this.server.put('/update-personal-details', isAuthenticated, personalDetailsController.update);
-    this.server.post('/driver-details', registrationController.insertDriverDetails.bind(registrationController));
+    this.server.put('/update-personal-details', isAuthenticated, accountController.update);
+    this.server.post('/driver-details', accountController.insertDriver.bind(accountController));
+    this.server.get('/account', passport.authenticate('jwt', { session: false }), accountController.getCurrentlyLoggedIn.bind(accountController));
   }
 }

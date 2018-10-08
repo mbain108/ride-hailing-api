@@ -1,35 +1,10 @@
 import { Request, Response } from 'restify';
-import * as bcrypt from 'bcrypt';
 import * as Drivers from '../cassandra/drivers';
-import { IDriver } from '../cassandra/drivers';
-import { v4 } from 'uuid';
 import * as passport from 'passport';
-import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from '../lib/auth';
 
 const TWILIO_INVALID_VERIFICATION_CODE = '60022';
 const TWILIO_EXPIRED_VERIFICATION_CODE = '60023';
 const TWILIO_API_KEY = process.env.TWILIO_API_KEY;
-
-const saltRounds = 10;
-
-interface IDriverDetails {
-  phoneNumber: string;
-  profilePhotoId: string;
-  licensePhotoId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  companyName: string;
-  vatNumber: string;
-  address: string;
-  city: string;
-  make: string;
-  model: string;
-  year: string;
-  licensePlate: string;
-  vehicleColor: string;
-}
 
 export default class RegistrationController {
 
@@ -37,36 +12,6 @@ export default class RegistrationController {
 
   constructor() {
     this._authy = require('authy')(TWILIO_API_KEY);
-  }
-
-  private createDriver(driverDetails: IDriverDetails): IDriver {
-    const driver: IDriver = {
-      id: v4(),
-      email: driverDetails.email,
-      emailConfirmed: false,
-      password: driverDetails.password,
-      phoneNumber: driverDetails.phoneNumber,
-      phoneConfirmed: true,
-      firstName: driverDetails.firstName,
-      lastName: driverDetails.lastName,
-      // shouldn't be company city
-      city: driverDetails.city,
-      companyName: driverDetails.companyName,
-      vatNumber: driverDetails.vatNumber,
-      companyAddress: driverDetails.address,
-      companyCity: driverDetails.city,
-      vehicleMake: driverDetails.make,
-      vehicleModel: driverDetails.model,
-      vehicleYear: parseInt(driverDetails.year, 10),
-      vehiclePlateNumber: driverDetails.licensePlate,
-      vehicleColor: driverDetails.vehicleColor,
-      profileImageUrl: driverDetails.profilePhotoId,
-      licenseImageUrl: driverDetails.licensePhotoId,
-      vehicleImageUrl: null,
-      davId: null,
-      privateKey: null,
-    };
-    return driver;
   }
 
   public sendSMS(request: Request, response: Response) {
@@ -119,34 +64,5 @@ export default class RegistrationController {
     const driver = await Drivers.findById('123');
     driver.email = '';
     await Drivers.update(driver);
-  }
-
-  public async insertDriverDetails(request: Request, response: Response) {
-    const driverDetails: IDriverDetails = request.body;
-    try {
-      await new Promise((resolve, reject) => bcrypt.hash(driverDetails.password, saltRounds, (err, hash) => {
-        if (err) {
-          reject(err);
-        } else {
-          driverDetails.password = hash;
-          resolve();
-        }
-      }));
-      const driver = this.createDriver(driverDetails);
-      driver.id = v4();
-      driver.createdFrom = request.connection.remoteAddress;
-
-      // save driver
-      Drivers.insert(driver);
-      const token = generateSignedToken(driver);
-      response.send(200, {
-        message: `Registered driver details`,
-        token,
-      });
-    } catch (err) {
-      response.send(500, {
-        message: `Failed to register driver details`,
-      });
-    }
   }
 }
