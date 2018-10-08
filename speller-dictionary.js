@@ -22,4 +22,5 @@ module.exports = [
   'SMS',
   'cors',
   'keyspace',
+  'jwt',
 ];

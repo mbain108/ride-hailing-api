@@ -4,6 +4,7 @@ import * as Drivers from '../cassandra/drivers';
 import { IDriver } from '../cassandra/drivers';
 import { v4 } from 'uuid';
 import * as passport from 'passport';
+import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from '../lib/auth';
 
 const TWILIO_INVALID_VERIFICATION_CODE = '60022';
 const TWILIO_EXPIRED_VERIFICATION_CODE = '60023';
@@ -122,30 +123,30 @@ export default class RegistrationController {
 
   public async insertDriverDetails(request: Request, response: Response) {
     const driverDetails: IDriverDetails = request.body;
-    await new Promise((resolve, reject) => bcrypt.hash(driverDetails.password, saltRounds, (err, hash) => {
-      if (err) {
-        reject(err);
-      } else {
-        driverDetails.password = hash;
-        resolve();
-      }
-    }));
-    const driver = this.createDriver(driverDetails);
-    driver.id = v4();
-    driver.createdFrom = request.connection.remoteAddress;
-    passport.authenticate('local.signup', (err, driverVerified, meta) => {
-      if (err) {
-        // tslint:disable-next-line:no-console
-        console.log(err);
-        response.send(500, {
-          message: meta.message,
-        });
-      } else {
-        Drivers.insert(driver);
-        response.send(200, {
-          message: `Got driver details`,
-        });
-      }
-    });
+    try {
+      await new Promise((resolve, reject) => bcrypt.hash(driverDetails.password, saltRounds, (err, hash) => {
+        if (err) {
+          reject(err);
+        } else {
+          driverDetails.password = hash;
+          resolve();
+        }
+      }));
+      const driver = this.createDriver(driverDetails);
+      driver.id = v4();
+      driver.createdFrom = request.connection.remoteAddress;
+
+      // save driver
+      Drivers.insert(driver);
+      const token = generateSignedToken(driver);
+      response.send(200, {
+        message: `Registered driver details`,
+        token,
+      });
+    } catch (err) {
+      response.send(500, {
+        message: `Failed to register driver details`,
+      });
+    }
   }
 }

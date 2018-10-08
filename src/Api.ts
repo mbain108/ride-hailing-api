@@ -1,9 +1,10 @@
-import { createServer, Server, plugins } from 'restify';
+import { createServer, Server, plugins, Request, Response, Next, RequestHandler, RequestHandlerType } from 'restify';
 import corsMiddleware = require('restify-cors-middleware');
 import StatsController from './controllers/StatsController';
 import RegistrationController from './controllers/RegistrationController';
 import PersonalDetailsController from './controllers/PersonalDetailsController';
-import { isAuthenticated } from './lib/passport';
+import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from './lib/auth';
+import * as passport from 'passport';
 
 export default class Api {
 
@@ -27,6 +28,9 @@ export default class Api {
 
     this.server.pre(cors.preflight);
     this.server.use(cors.actual);
+
+    // const passportInit: RequestHandlerType = passport.initialize() as any;
+    this.server.use(passport.initialize() as any);
 
     this.server.use(plugins.queryParser());
     this.server.use(plugins.bodyParser());
