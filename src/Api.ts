@@ -5,6 +5,7 @@ import RegistrationController from './controllers/RegistrationController';
 import AccountController from './controllers/AccountController';
 import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from './lib/auth';
 import * as passport from 'passport';
+import AccountController from './controllers/AccountController';
 
 export default class Api {
 
@@ -22,7 +23,7 @@ export default class Api {
 
     const cors = corsMiddleware({
       origins: ['*'],
-      allowHeaders: ['Content-Type', 'Authorization'],
+      allowHeaders: ['Content-Type'],
       exposeHeaders: ['Content-Type'],
     });
 
@@ -41,5 +42,6 @@ export default class Api {
     this.server.put('/update-personal-details', isAuthenticated, accountController.update);
     this.server.post('/driver-details', accountController.insertDriver.bind(accountController));
     this.server.get('/account', passport.authenticate('jwt', { session: false }), accountController.getCurrentlyLoggedIn.bind(accountController));
+    this.server.post('/driver-sign-in', accountController.authenticateDriver.bind(accountController));
   }
 }

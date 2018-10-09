@@ -1,5 +1,12 @@
 import { Request, Response } from 'restify';
-import { IDriver, IPersonalDetails, insert, update, findById } from '../cassandra/drivers';
+import {
+  IDriver,
+  IPersonalDetails,
+  insert,
+  update,
+  findById,
+  findByEmail,
+} from '../cassandra/drivers';
 import { v4 as uuid} from 'uuid';
 import * as bcrypt from 'bcrypt';
 import { IRequestWithAuthentication, generateSignedToken } from '../lib/auth';
@@ -23,6 +30,11 @@ interface IDriverDetails {
   year: string;
   licensePlate: string;
   vehicleColor: string;
+}
+
+interface ILoginDetails {
+  email: string;
+  password: string;
 }
 
 export default class AccountController {
@@ -55,6 +67,24 @@ export default class AccountController {
       privateKey: null,
     };
     return driver;
+  }
+
+  public async authenticateDriver(request: Request, response: Response) {
+    const loginDetails: ILoginDetails = request.body;
+    const driver: IDriver = await findByEmail(loginDetails.email);
+    if (!!driver) {
+      const passwordCorrect = await bcrypt.compare(loginDetails.password, driver.password, (error, same) => {
+        if (error || !same) {
+          return false;
+        }
+        return true;
+      });
+      if (passwordCorrect) {
+        const token = generateSignedToken(driver);
+        response.send(200, {token});
+      }
+    }
+    response.send(200, {userAuthenticated: false});
   }
 
   public async insertDriver(request: Request, response: Response) {
