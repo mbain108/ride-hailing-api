@@ -44,7 +44,7 @@ export function findById(id: string): Promise<IDriver> {
   return getClient().execute(`SELECT * from ${keyspace}.drivers WHERE id=?`, [id], { prepare: true }).then((res): IDriver => {
     const first = res.first();
     return {
-      id: first.id,
+      id: first.id.toString(),
       createdAt: first.created_at,
       createdFrom: first.created_from,
       email: first.email,
@@ -77,7 +77,7 @@ export function findByEmail(email: string): Promise<IDriver> {
   return getClient().execute(`SELECT * from ${keyspace}.drivers_email WHERE email=?`, [email], { prepare: true }).then((res): IDriver => {
     const first = res.first();
     return first ? {
-      id: first.id,
+      id: first.id.toString(),
       createdAt: first.created_at,
       createdFrom: first.created_from,
       email: first.email,

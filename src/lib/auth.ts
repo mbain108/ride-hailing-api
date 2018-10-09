@@ -10,12 +10,12 @@ import { Request, Response, Next } from 'restify';
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: 'secret',
-  issuer: 'accounts.mooving.io',
-  audience: 'mooving.io',
+  // issuer: 'accounts.mooving.io',
+  // audience: 'mooving.io',
 };
 
 export interface IRequestWithAuthentication extends Request {
-  user: string;
+  user: any;
   /**
    * Check passport.js authentication
    */
@@ -33,9 +33,9 @@ passport.serializeUser<any, any>((user, done) => {
   done(undefined, user.id);
 });
 
-passport.deserializeUser(async (id: string, done) => {
+passport.deserializeUser((id: string, done) => {
   try {
-    const driver = await Drivers.findById(id);
+    const driver = { id };
     done(undefined, driver);
   } catch (err) {
     done(err, undefined);
@@ -98,11 +98,11 @@ export function isAuthenticated(request: IRequestWithAuthentication, response: R
   response.send(401, 'User id is not logged in.');
 }
 
-passport.use(new JwtStrategy(jwtOptions, (jwtPayload, done) => {
+passport.use('jwt', new JwtStrategy(jwtOptions, (jwtPayload, done) => {
   try {
-    const driver = Drivers.findById(jwtPayload.sub);
-    if (driver) {
-      return done(null, driver);
+    // const driver = Drivers.findById(jwtPayload.id);
+    if (jwtPayload.id) {
+      return done(null, { id: jwtPayload.id });
     } else {
       return done(null, false);
        // or you could create a new account
