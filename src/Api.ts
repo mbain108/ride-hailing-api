@@ -5,7 +5,6 @@ import RegistrationController from './controllers/RegistrationController';
 import AccountController from './controllers/AccountController';
 import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from './lib/auth';
 import * as passport from 'passport';
-import AccountController from './controllers/AccountController';
 
 export default class Api {
 
