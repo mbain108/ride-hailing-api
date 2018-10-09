@@ -2,7 +2,6 @@ import { createServer, Server, plugins, Request, Response, Next, RequestHandler,
 import corsMiddleware = require('restify-cors-middleware');
 import StatsController from './controllers/StatsController';
 import RegistrationController from './controllers/RegistrationController';
-import AccountController from './controllers/AccountController';
 import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from './lib/auth';
 import * as passport from 'passport';
 import AccountController from './controllers/AccountController';
@@ -23,7 +22,7 @@ export default class Api {
 
     const cors = corsMiddleware({
       origins: ['*'],
-      allowHeaders: ['Content-Type'],
+      allowHeaders: ['Content-Type', 'Authorization'],
       exposeHeaders: ['Content-Type'],
     });
 
