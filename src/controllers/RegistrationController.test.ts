@@ -24,22 +24,20 @@ describe('RegistrationController class', () => {
 
       const phoneNumber = '+972546486055';
       const countryCode = '972';
-      // tslint:disable-next-line:variable-name
-      const RequestMock = jest.fn<Request>(() => ({
+      const requestMock = jest.fn<Request>(() => ({
         query: { phoneNumber, countryCode },
       }));
-      const requestMock = new RequestMock();
-      // tslint:disable-next-line:variable-name
-      const ResponseMock = jest.fn<Response>(() => ({
+      const requestMockInstance = new requestMock();
+      const responseMock = jest.fn<Response>(() => ({
         send: jest.fn(() => ''),
       }));
-      const responseMock = new ResponseMock();
+      const responseMockInstance = new responseMock();
 
       const registrationController = new RegistrationController();
-      registrationController.sendSMS(requestMock, responseMock);
+      registrationController.sendSMS(requestMockInstance, responseMockInstance);
 
       expect(authyPhonesMock.verification_start).toBeCalledWith(phoneNumber, countryCode, expect.anything(), expect.anything());
-      expect(responseMock.send).toBeCalledWith(200, expect.anything());
+      expect(responseMockInstance.send).toBeCalledWith(200, expect.anything());
     });
 
     it('should get 500 response due to authy error', () => {
@@ -54,22 +52,20 @@ describe('RegistrationController class', () => {
 
       const phoneNumber = '+972546486055';
       const countryCode = '972';
-      // tslint:disable-next-line:variable-name
-      const RequestMock = jest.fn<Request>(() => ({
+      const requestMock = jest.fn<Request>(() => ({
         query: { phoneNumber, countryCode },
       }));
-      const requestMock = new RequestMock();
-      // tslint:disable-next-line:variable-name
-      const ResponseMock = jest.fn<Response>(() => ({
+      const requestMockInstance = new requestMock();
+      const responseMock = jest.fn<Response>(() => ({
         send: jest.fn(() => ''),
       }));
-      const responseMock = new ResponseMock();
+      const responseMockInstance = new responseMock();
 
       const registrationController = new RegistrationController();
-      registrationController.sendSMS(requestMock, responseMock);
+      registrationController.sendSMS(requestMockInstance, responseMockInstance);
 
       expect(authyPhonesMock.verification_start).toBeCalledWith(phoneNumber, countryCode, expect.anything(), expect.anything());
-      expect(responseMock.send).toHaveBeenCalledWith(500, expect.anything());
+      expect(responseMockInstance.send).toHaveBeenCalledWith(500, expect.anything());
     });
   });
 
@@ -87,22 +83,20 @@ describe('RegistrationController class', () => {
       const phoneNumber = '+972546486055';
       const countryCode = '972';
       const verificationCode = '1397';
-      // tslint:disable-next-line:variable-name
-      const RequestMock = jest.fn<Request>(() => ({
+      const requestMock = jest.fn<Request>(() => ({
         query: { phoneNumber, countryCode, verificationCode },
       }));
-      const requestMock = new RequestMock();
-      // tslint:disable-next-line:variable-name
-      const ResponseMock = jest.fn<Response>(() => ({
+      const requestMockInstance = new requestMock();
+      const responseMock = jest.fn<Response>(() => ({
         send: jest.fn((status: number, body: any) => ''),
       }));
-      const responseMock = new ResponseMock();
+      const responseMockInstance = new responseMock();
 
       const registrationController = new RegistrationController();
-      registrationController.verifyCode(requestMock, responseMock);
+      registrationController.verifyCode(requestMockInstance, responseMockInstance);
 
       expect(authyPhonesMock.verification_check).toBeCalledWith(phoneNumber, countryCode, verificationCode, expect.anything());
-      expect(responseMock.send).toHaveBeenCalledWith(200, { verified: true }, expect.anything());
+      expect(responseMockInstance.send).toHaveBeenCalledWith(200, { verified: true }, expect.anything());
     });
 
     it('should get 200 response with verified false when wrong verification is sent', () => {
@@ -118,22 +112,20 @@ describe('RegistrationController class', () => {
       const phoneNumber = '+972546486055';
       const countryCode = '972';
       const verificationCode = '1397';
-      // tslint:disable-next-line:variable-name
-      const RequestMock = jest.fn<Request>(() => ({
+      const requestMock = jest.fn<Request>(() => ({
         query: { phoneNumber, countryCode, verificationCode },
       }));
-      const requestMock = new RequestMock();
-      // tslint:disable-next-line:variable-name
-      const ResponseMock = jest.fn<Response>(() => ({
+      const requestMockInstance = new requestMock();
+      const responseMock = jest.fn<Response>(() => ({
         send: jest.fn((status: number, body: any) => ''),
       }));
-      const responseMock = new ResponseMock();
+      const responseMockInstance = new responseMock();
 
       const registrationController = new RegistrationController();
-      registrationController.verifyCode(requestMock, responseMock);
+      registrationController.verifyCode(requestMockInstance, responseMockInstance);
 
       expect(authyPhonesMock.verification_check).toBeCalledWith(phoneNumber, countryCode, verificationCode, expect.anything());
-      expect(responseMock.send).toHaveBeenCalledWith(200, { verified: false }, expect.anything());
+      expect(responseMockInstance.send).toHaveBeenCalledWith(200, { verified: false }, expect.anything());
     });
 
     it('should get 200 response with verified false and expired true when code has been expired', () => {
@@ -149,22 +141,20 @@ describe('RegistrationController class', () => {
       const phoneNumber = '+972546486055';
       const countryCode = '972';
       const verificationCode = '1397';
-      // tslint:disable-next-line:variable-name
-      const RequestMock = jest.fn<Request>(() => ({
+      const requestMock = jest.fn<Request>(() => ({
         query: { phoneNumber, countryCode, verificationCode },
       }));
-      const requestMock = new RequestMock();
-      // tslint:disable-next-line:variable-name
-      const ResponseMock = jest.fn<Response>(() => ({
+      const requestMockInstance = new requestMock();
+      const responseMock = jest.fn<Response>(() => ({
         send: jest.fn((status: number, body: any) => ''),
       }));
-      const responseMock = new ResponseMock();
+      const responseMockInstance = new responseMock();
 
       const registrationController = new RegistrationController();
-      registrationController.verifyCode(requestMock, responseMock);
+      registrationController.verifyCode(requestMockInstance, responseMockInstance);
 
       expect(authyPhonesMock.verification_check).toBeCalledWith(phoneNumber, countryCode, verificationCode, expect.anything());
-      expect(responseMock.send).toHaveBeenCalledWith(200, { verified: false, expired: true }, expect.anything());
+      expect(responseMockInstance.send).toHaveBeenCalledWith(200, { verified: false, expired: true }, expect.anything());
     });
 
     it('should get 500 response due to authy error', () => {
@@ -179,22 +169,20 @@ describe('RegistrationController class', () => {
 
       const phoneNumber = '+972546486055';
       const countryCode = '972';
-      // tslint:disable-next-line:variable-name
-      const RequestMock = jest.fn<Request>(() => ({
+      const requestMock = jest.fn<Request>(() => ({
         query: { phoneNumber, countryCode },
       }));
-      const requestMock = new RequestMock();
-      // tslint:disable-next-line:variable-name
-      const ResponseMock = jest.fn<Response>(() => ({
+      const requestMockInstance = new requestMock();
+      const responseMock = jest.fn<Response>(() => ({
         send: jest.fn(() => ''),
       }));
-      const responseMock = new ResponseMock();
+      const responseMockInstance = new responseMock();
 
       const registrationController = new RegistrationController();
-      registrationController.sendSMS(requestMock, responseMock);
+      registrationController.sendSMS(requestMockInstance, responseMockInstance);
 
       expect(authyPhonesMock.verification_start).toBeCalledWith(phoneNumber, countryCode, expect.anything(), expect.anything());
-      expect(responseMock.send).toHaveBeenCalledWith(500, expect.anything());
+      expect(responseMockInstance.send).toHaveBeenCalledWith(500, expect.anything());
     });
   });
 });
