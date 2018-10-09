@@ -23,4 +23,6 @@ module.exports = [
   'cors',
   'keyspace',
   'jwt',
+  'cassandra',
+  'auth',
 ];
