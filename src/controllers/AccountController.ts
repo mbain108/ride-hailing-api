@@ -73,15 +73,11 @@ export default class AccountController {
     const loginDetails: ILoginDetails = request.body;
     const driver: IDriver = await findByEmail(loginDetails.email);
     if (!!driver) {
-      const passwordCorrect = await bcrypt.compare(loginDetails.password, driver.password, (error, same) => {
-        if (error || !same) {
-          return false;
-        }
-        return true;
-      });
+      const passwordCorrect = await bcrypt.compare(loginDetails.password, driver.password);
       if (passwordCorrect) {
         const token = generateSignedToken(driver);
         response.send(200, {token});
+        return;
       }
     }
     response.send(200, {userAuthenticated: false});
