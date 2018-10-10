@@ -3,7 +3,7 @@ import {
   IDriver,
   IPersonalDetails,
   insert,
-  update,
+  updatePersonalDetails,
   findById,
   findByEmail,
 } from '../cassandra/drivers';
@@ -115,7 +115,7 @@ export default class AccountController {
     const personalDetails: IPersonalDetails = request.body;
     if (request.user) {
       try {
-        await update(personalDetails);
+        await updatePersonalDetails(personalDetails);
         response.send(200, {
           message: `Updated driver details`,
         });

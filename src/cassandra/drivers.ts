@@ -146,5 +146,5 @@ export function updatePersonalDetails(personalDetails: IPersonalDetails): Promis
       personalDetails.city,
       personalDetails.id,
     ])
-    .then(res => {/**/ });
+    .then(res => { /**/ });
 }
