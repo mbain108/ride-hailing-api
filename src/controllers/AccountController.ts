@@ -111,13 +111,19 @@ export default class AccountController {
     }
   }
 
-  public async update(request: IRequestWithAuthentication, response: Response) {
+  public async updatePersonalDetails(request: IRequestWithAuthentication, response: Response) {
     const personalDetails: IPersonalDetails = request.body;
     if (request.user) {
-      await update(personalDetails);
-      response.send(200, {
-        message: `Got driver details`,
-      });
+      try {
+        await update(personalDetails);
+        response.send(200, {
+          message: `Updated driver details`,
+        });
+      } catch (err) {
+        response.send(500, {
+          message: `Failed to update driver details`,
+        });
+      }
     } else {
       response.send(401, 'User id is not set');
     }

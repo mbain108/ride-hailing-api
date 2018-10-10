@@ -38,7 +38,11 @@ export default class Api {
     this.server.get('/health', statsController.getInfo);
     this.server.post('/sms', registrationController.sendSMS.bind(registrationController));
     this.server.get('/verify-code', registrationController.verifyCode.bind(registrationController));
-    this.server.put('/update-personal-details', isAuthenticated, accountController.update);
+    this.server.put(
+      '/update-personal-details',
+      passport.authenticate('jwt', { session: false }),
+      accountController.updatePersonalDetails.bind(accountController),
+    );
     this.server.post('/driver-details', accountController.insertDriver.bind(accountController));
     this.server.get('/account', passport.authenticate('jwt', { session: false }), accountController.getCurrentlyLoggedIn.bind(accountController));
     this.server.post('/driver-sign-in', accountController.authenticateDriver.bind(accountController));
