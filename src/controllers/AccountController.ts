@@ -120,6 +120,7 @@ export default class AccountController {
           message: `Updated driver details`,
         });
       } catch (err) {
+        console.log(err);
         response.send(500, {
           message: `Failed to update driver details`,
         });

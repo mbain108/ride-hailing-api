@@ -34,6 +34,9 @@ export interface IPersonalDetails {
   lastName: string;
   email: string;
   city: string;
+  profileImageUrl: string;
+  licenseImageUrl: string;
+  vehicleImageUrl: string;
 }
 
 export function list(): Promise<IDriver[]> {
@@ -137,14 +140,20 @@ export function updatePersonalDetails(personalDetails: IPersonalDetails): Promis
       email = ?,
       first_name = ?,
       last_name = ?,
-      city = ?
+      city = ?,
+      profile_image_id = ?,
+      license_image_id = ?,
+      vehicle_image_id = ?
     WHERE id = ?;`,
     [
       personalDetails.email,
       personalDetails.firstName,
       personalDetails.lastName,
       personalDetails.city,
+      personalDetails.profileImageUrl,
+      personalDetails.licenseImageUrl,
+      personalDetails.vehicleImageUrl,
       personalDetails.id,
     ])
-    .then(res => { /**/ });
+    .then(res => { console.log(res); });
 }
