@@ -6,10 +6,17 @@ import {
   updatePersonalDetails,
   findById,
   findByEmail,
+  updateCompanyDetails,
+  updateVehicleDetails,
+  ICompanyDetails,
+  IVehicleDetails,
 } from '../cassandra/drivers';
 import { v4 as uuid} from 'uuid';
 import * as bcrypt from 'bcrypt';
-import { IRequestWithAuthentication, generateSignedToken } from '../lib/auth';
+import {
+  IRequestWithAuthentication,
+  generateSignedToken,
+} from '../lib/auth';
 
 const saltRounds = 10;
 
@@ -116,6 +123,42 @@ export default class AccountController {
     if (request.user) {
       try {
         await updatePersonalDetails(personalDetails);
+        response.send(200, {
+          message: `Updated driver details`,
+        });
+      } catch (err) {
+        response.send(500, {
+          message: `Failed to update driver details`,
+        });
+      }
+    } else {
+      response.send(401, 'User id is not set');
+    }
+  }
+
+  public async updateCompanyDetails(request: IRequestWithAuthentication, response: Response) {
+    const personalDetails: ICompanyDetails = request.body;
+    if (request.user) {
+      try {
+        await updateCompanyDetails(personalDetails);
+        response.send(200, {
+          message: `Updated driver details`,
+        });
+      } catch (err) {
+        response.send(500, {
+          message: `Failed to update driver details`,
+        });
+      }
+    } else {
+      response.send(401, 'User id is not set');
+    }
+  }
+
+  public async updateVehicleDetails(request: IRequestWithAuthentication, response: Response) {
+    const personalDetails: IVehicleDetails = request.body;
+    if (request.user) {
+      try {
+        await updateVehicleDetails(personalDetails);
         response.send(200, {
           message: `Updated driver details`,
         });

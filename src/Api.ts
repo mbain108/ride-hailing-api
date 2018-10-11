@@ -42,6 +42,16 @@ export default class Api {
       passport.authenticate('jwt', { session: false }),
       accountController.updatePersonalDetails.bind(accountController),
     );
+    this.server.put(
+      '/update-company-details',
+      passport.authenticate('jwt', { session: false }),
+      accountController.updateCompanyDetails.bind(accountController),
+    );
+    this.server.put(
+      '/update-vehicle-details',
+      passport.authenticate('jwt', { session: false }),
+      accountController.updateVehicleDetails.bind(accountController),
+    );
     this.server.post('/driver-details', accountController.insertDriver.bind(accountController));
     this.server.get('/account', passport.authenticate('jwt', { session: false }), accountController.getCurrentlyLoggedIn.bind(accountController));
     this.server.post('/driver-sign-in', accountController.authenticateDriver.bind(accountController));
