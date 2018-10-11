@@ -155,10 +155,10 @@ export default class AccountController {
   }
 
   public async updateVehicleDetails(request: IRequestWithAuthentication, response: Response) {
-    const personalDetails: IVehicleDetails = request.body;
+    const vehicleDetails: IVehicleDetails = request.body;
     if (request.user) {
       try {
-        await updateVehicleDetails(personalDetails);
+        await updateVehicleDetails(vehicleDetails);
         response.send(200, {
           message: `Updated driver details`,
         });

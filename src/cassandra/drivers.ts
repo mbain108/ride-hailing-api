@@ -48,12 +48,12 @@ export interface ICompanyDetails {
 
 export interface IVehicleDetails {
   id?: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  city: string;
-  profileImageUrl: string;
-  licenseImageUrl: string;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleYear?: number;
+  vehiclePlateNumber?: string;
+  vehicleColor?: string;
+  vehicleImageUrl?: string;
 }
 
 export function list(): Promise<IDriver[]> {
@@ -169,7 +169,7 @@ export function updatePersonalDetails(personalDetails: IPersonalDetails): Promis
       personalDetails.profileImageUrl,
       personalDetails.licenseImageUrl,
       personalDetails.id,
-    ])
+    ], { prepare: true })
     .then(res => { /* */ });
 }
 
@@ -186,27 +186,27 @@ export function updateCompanyDetails(companyDetails: ICompanyDetails): Promise<v
       companyDetails.companyName,
       companyDetails.vatNumber,
       companyDetails.id,
-    ])
+    ], { prepare: true })
     .then(res => { /* */ });
 }
 
-export function updateVehicleDetails(personalDetails: IPersonalDetails): Promise<void> {
+export function updateVehicleDetails(vehicleDetails: IVehicleDetails): Promise<void> {
   return getClient().execute(`UPDATE ${keyspace}.drivers SET
-      email = ?,
-      first_name = ?,
-      last_name = ?,
-      city = ?,
-      profile_image_id = ?,
-      license_image_id = ?
+      vehicle_make = ?,
+      vehicle_model = ?,
+      vehicle_year = ?,
+      vehicle_plate_number = ?,
+      vehicle_color = ?,
+      vehicle_image_id = ?
     WHERE id = ?;`,
     [
-      personalDetails.email,
-      personalDetails.firstName,
-      personalDetails.lastName,
-      personalDetails.city,
-      personalDetails.profileImageUrl,
-      personalDetails.licenseImageUrl,
-      personalDetails.id,
-    ])
+      vehicleDetails.vehicleMake,
+      vehicleDetails.vehicleModel,
+      vehicleDetails.vehicleYear,
+      vehicleDetails.vehiclePlateNumber,
+      vehicleDetails.vehicleColor,
+      vehicleDetails.vehicleImageUrl,
+      vehicleDetails.id,
+    ], { prepare: true })
     .then(res => { /* */ });
 }
