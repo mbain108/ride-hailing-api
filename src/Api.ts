@@ -2,7 +2,6 @@ import { createServer, Server, plugins, Request, Response, Next, RequestHandler,
 import corsMiddleware = require('restify-cors-middleware');
 import StatsController from './controllers/StatsController';
 import RegistrationController from './controllers/RegistrationController';
-import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from './lib/auth';
 import * as passport from 'passport';
 import AccountController from './controllers/AccountController';
 
