@@ -35,25 +35,26 @@ export default class Api {
     this.server.use(plugins.bodyParser());
     this.server.get('/', statsController.getInfo);
     this.server.get('/health', statsController.getInfo);
-    this.server.post('/sms', registrationController.sendSMS.bind(registrationController));
-    this.server.get('/verify-code', registrationController.verifyCode.bind(registrationController));
+    this.server.post('/sms', registrationController.sendSMS);
+    this.server.get('/verify-code', registrationController.verifyCode);
     this.server.put(
       '/update-personal-details',
       passport.authenticate('jwt', { session: false }),
-      accountController.updatePersonalDetails.bind(accountController),
+      accountController.updatePersonalDetails,
     );
     this.server.put(
       '/update-company-details',
       passport.authenticate('jwt', { session: false }),
-      accountController.updateCompanyDetails.bind(accountController),
+      accountController.updateCompanyDetails,
     );
     this.server.put(
       '/update-vehicle-details',
       passport.authenticate('jwt', { session: false }),
-      accountController.updateVehicleDetails.bind(accountController),
+      accountController.updateVehicleDetails,
     );
-    this.server.post('/driver-details', accountController.insertDriver.bind(accountController));
-    this.server.get('/account', passport.authenticate('jwt', { session: false }), accountController.getCurrentlyLoggedIn.bind(accountController));
-    this.server.post('/driver-sign-in', accountController.authenticateDriver.bind(accountController));
+    this.server.post('/driver-details', accountController.insertDriver);
+    this.server.get('/account', passport.authenticate('jwt', { session: false }), accountController.getCurrentlyLoggedIn);
+    this.server.post('/driver-sign-in', accountController.authenticateDriver);
+    this.server.post('/reset-password', accountController.sendPasswordResetEmail);
   }
 }

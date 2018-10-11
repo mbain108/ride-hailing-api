@@ -12,6 +12,8 @@ export default class RegistrationController {
 
   constructor() {
     this._authy = require('authy')(TWILIO_API_KEY);
+    this.sendSMS = this.sendSMS.bind(this);
+    this.verifyCode = this.verifyCode.bind(this);
   }
 
   public sendSMS(request: Request, response: Response) {

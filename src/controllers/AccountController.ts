@@ -13,12 +13,13 @@ import {
 } from '../cassandra/drivers';
 import { v4 as uuid} from 'uuid';
 import * as bcrypt from 'bcrypt';
-import {
-  IRequestWithAuthentication,
-  generateSignedToken,
-} from '../lib/auth';
+import { IRequestWithAuthentication, generateSignedToken } from '../lib/auth';
+import sendEmail from '../lib/email';
 
 const saltRounds = 10;
+const passwordResetSourceEmail = 'test@dav.network';
+const passwordResetSubject = 'Mooving password reset';
+const appAddress = process.env.appAddress || 'localhost:3000';
 
 interface IDriverDetails {
   phoneNumber: string;
@@ -45,6 +46,16 @@ interface ILoginDetails {
 }
 
 export default class AccountController {
+
+  constructor() {
+    this.insertDriver = this.insertDriver.bind(this);
+    this.getCurrentlyLoggedIn = this.getCurrentlyLoggedIn.bind(this);
+    this.authenticateDriver = this.authenticateDriver.bind(this);
+    this.sendPasswordResetEmail = this.sendPasswordResetEmail.bind(this);
+    this.updatePersonalDetails = this.updatePersonalDetails.bind(this);
+    this.updateCompanyDetails = this.updateCompanyDetails.bind(this);
+    this.updateVehicleDetails = this.updateVehicleDetails.bind(this);
+  }
 
   private getDriver(driverDetails: IDriverDetails): IDriver {
     const driver: IDriver = {
@@ -91,6 +102,7 @@ export default class AccountController {
   }
 
   public async insertDriver(request: Request, response: Response) {
+    // todo: check if email/phone exists on db
     const driverDetails: IDriverDetails = request.body;
     try {
       await new Promise((resolve, reject) => bcrypt.hash(driverDetails.password, saltRounds, (err, hash) => {
@@ -181,6 +193,24 @@ export default class AccountController {
       });
     } else {
       response.send(401, 'User id is not set');
+    }
+  }
+
+  public async sendPasswordResetEmail(request: Request, response: Response) {
+    const driver: IDriver = await findByEmail(request.query.email);
+    if (!!driver) {
+      const token = generateSignedToken(driver);
+      const passwordResetUrl = encodeURI(`http://${appAddress}/password-reset?token=${token}`);
+      const htmlContent = `link for <b>password</b> reset: ${passwordResetUrl}`;
+      try {
+        sendEmail(passwordResetSourceEmail, driver.email, passwordResetSubject, htmlContent);
+        response.send(200);
+      } catch (error) {
+        response.send(200);
+      }
+
+    } else {
+      response.send(200);
     }
   }
 }

@@ -149,6 +149,78 @@ describe('AccountController class', () => {
       await accountControllerInstance.getCurrentlyLoggedIn(requestMockInstance, responseMockInstance);
       expect(responseMockInstance.send).toBeCalledWith(401, 'User id is not set');
     });
+  });
 
+  describe('sendPasswordResetEmail', () => {
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+      jest.resetModules();
+    });
+
+    it('should send password reset email successfully when params are valid', async () => {
+      const cassandra = require('../cassandra/drivers');
+      cassandra.findByEmail = jest.fn((emailParam: string) => driver);
+      const authMock = {
+        generateSignedToken: jest.fn((driverParam: IDriver) => token),
+      };
+      let htmlSent = '';
+      const sendEmailMock = jest.fn((from: string, to: string, subject: string, html: string) => {
+        htmlSent = html;
+        return Promise.resolve('success');
+      });
+      jest.doMock('../lib/auth', () => authMock);
+      jest.doMock('../lib/email', () => ({default: sendEmailMock}));
+      const accountController = (await import('./AccountController')).default;
+      const token = 'tokenabc';
+      const email = 'test@dav.network';
+      const driver: IDriver = {id: 'id', email};
+      const requestMock = jest.fn<Request>(() => ({
+        query: { email },
+      }));
+      const requestMockInstance = new requestMock();
+      const responseMock = jest.fn<Response>(() => ({
+        send: jest.fn(() => ''),
+      }));
+      const responseMockInstance = new responseMock();
+      const accountControllerInstance = new accountController();
+
+      await accountControllerInstance.sendPasswordResetEmail(requestMockInstance, responseMockInstance);
+
+      expect(cassandra.findByEmail).toHaveBeenCalledWith(email);
+      expect(authMock.generateSignedToken).toHaveBeenCalledWith(driver);
+      expect(sendEmailMock).toHaveBeenCalledWith(expect.anything(), email, expect.anything(), expect.anything());
+      expect(htmlSent.indexOf(token) > -1);
+    });
+
+    it('should not send password reset email when it does not exist in database' , async () => {
+      const cassandra = require('../cassandra/drivers');
+      cassandra.findByEmail = jest.fn((emailParam: string) => null);
+      const authMock = {
+        generateSignedToken: jest.fn((driverParam: IDriver) => token),
+      };
+      const sendEmailMock = jest.fn((from: string, to: string, subject: string, html: string) => Promise.resolve('should not happen'));
+      jest.doMock('../lib/auth', () => authMock);
+      jest.doMock('../lib/email', () => ({default: sendEmailMock}));
+      const accountController = (await import('./AccountController')).default;
+      const token = 'token';
+      const email = 'test@dav.network';
+      const driver: IDriver = {id: 'id', email};
+      const requestMock = jest.fn<Request>(() => ({
+        query: { email },
+      }));
+      const requestMockInstance = new requestMock();
+      const responseMock = jest.fn<Response>(() => ({
+        send: jest.fn(() => ''),
+      }));
+      const responseMockInstance = new responseMock();
+      const accountControllerInstance = new accountController();
+
+      await accountControllerInstance.sendPasswordResetEmail(requestMockInstance, responseMockInstance);
+
+      expect(cassandra.findByEmail).toHaveBeenCalledWith(email);
+      expect(authMock.generateSignedToken).toHaveBeenCalledTimes(0);
+      expect(sendEmailMock).toHaveBeenCalledTimes(0);
+    });
   });
 });

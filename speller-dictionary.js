@@ -25,4 +25,7 @@ module.exports = [
   'jwt',
   'cassandra',
   'auth',
+  'html',
+  'mailgun',
+  'app',
 ];
