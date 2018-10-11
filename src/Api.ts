@@ -2,7 +2,6 @@ import { createServer, Server, plugins, Request, Response, Next, RequestHandler,
 import corsMiddleware = require('restify-cors-middleware');
 import StatsController from './controllers/StatsController';
 import RegistrationController from './controllers/RegistrationController';
-import { isAuthenticated, IRequestWithAuthentication, generateSignedToken } from './lib/auth';
 import * as passport from 'passport';
 import AccountController from './controllers/AccountController';
 
@@ -38,7 +37,21 @@ export default class Api {
     this.server.get('/health', statsController.getInfo);
     this.server.post('/sms', registrationController.sendSMS);
     this.server.get('/verify-code', registrationController.verifyCode);
-    this.server.put('/update-personal-details', isAuthenticated, accountController.update);
+    this.server.put(
+      '/update-personal-details',
+      passport.authenticate('jwt', { session: false }),
+      accountController.updatePersonalDetails.bind(accountController),
+    );
+    this.server.put(
+      '/update-company-details',
+      passport.authenticate('jwt', { session: false }),
+      accountController.updateCompanyDetails.bind(accountController),
+    );
+    this.server.put(
+      '/update-vehicle-details',
+      passport.authenticate('jwt', { session: false }),
+      accountController.updateVehicleDetails.bind(accountController),
+    );
     this.server.post('/driver-details', accountController.insertDriver);
     this.server.get('/account', passport.authenticate('jwt', { session: false }), accountController.getCurrentlyLoggedIn);
     this.server.post('/driver-sign-in', accountController.authenticateDriver);

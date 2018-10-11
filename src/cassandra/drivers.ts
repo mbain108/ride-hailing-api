@@ -34,6 +34,26 @@ export interface IPersonalDetails {
   lastName: string;
   email: string;
   city: string;
+  profileImageUrl: string;
+  licenseImageUrl: string;
+}
+
+export interface ICompanyDetails {
+  id?: string;
+  companyName?: string;
+  vatNumber?: string;
+  companyAddress?: string;
+  companyCity?: string;
+}
+
+export interface IVehicleDetails {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  city: string;
+  profileImageUrl: string;
+  licenseImageUrl: string;
 }
 
 export function list(): Promise<IDriver[]> {
@@ -137,14 +157,56 @@ export function updatePersonalDetails(personalDetails: IPersonalDetails): Promis
       email = ?,
       first_name = ?,
       last_name = ?,
-      city = ?
+      city = ?,
+      profile_image_id = ?,
+      license_image_id = ?
     WHERE id = ?;`,
     [
       personalDetails.email,
       personalDetails.firstName,
       personalDetails.lastName,
       personalDetails.city,
+      personalDetails.profileImageUrl,
+      personalDetails.licenseImageUrl,
       personalDetails.id,
     ])
-    .then(res => {/**/ });
+    .then(res => { /* */ });
+}
+
+export function updateCompanyDetails(companyDetails: ICompanyDetails): Promise<void> {
+  return getClient().execute(`UPDATE ${keyspace}.drivers SET
+      company_address = ?,
+      company_city = ?,
+      company_name = ?,
+      vat_number = ?
+    WHERE id = ?;`,
+    [
+      companyDetails.companyAddress,
+      companyDetails.companyCity,
+      companyDetails.companyName,
+      companyDetails.vatNumber,
+      companyDetails.id,
+    ])
+    .then(res => { /* */ });
+}
+
+export function updateVehicleDetails(personalDetails: IPersonalDetails): Promise<void> {
+  return getClient().execute(`UPDATE ${keyspace}.drivers SET
+      email = ?,
+      first_name = ?,
+      last_name = ?,
+      city = ?,
+      profile_image_id = ?,
+      license_image_id = ?
+    WHERE id = ?;`,
+    [
+      personalDetails.email,
+      personalDetails.firstName,
+      personalDetails.lastName,
+      personalDetails.city,
+      personalDetails.profileImageUrl,
+      personalDetails.licenseImageUrl,
+      personalDetails.id,
+    ])
+    .then(res => { /* */ });
 }
