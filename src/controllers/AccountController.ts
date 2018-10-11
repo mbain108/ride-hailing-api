@@ -52,6 +52,9 @@ export default class AccountController {
     this.getCurrentlyLoggedIn = this.getCurrentlyLoggedIn.bind(this);
     this.authenticateDriver = this.authenticateDriver.bind(this);
     this.sendPasswordResetEmail = this.sendPasswordResetEmail.bind(this);
+    this.updatePersonalDetails = this.updatePersonalDetails.bind(this);
+    this.updateCompanyDetails = this.updateCompanyDetails.bind(this);
+    this.updateVehicleDetails = this.updateVehicleDetails.bind(this);
   }
 
   private getDriver(driverDetails: IDriverDetails): IDriver {

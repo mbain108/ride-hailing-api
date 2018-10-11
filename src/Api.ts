@@ -40,17 +40,17 @@ export default class Api {
     this.server.put(
       '/update-personal-details',
       passport.authenticate('jwt', { session: false }),
-      accountController.updatePersonalDetails.bind(accountController),
+      accountController.updatePersonalDetails,
     );
     this.server.put(
       '/update-company-details',
       passport.authenticate('jwt', { session: false }),
-      accountController.updateCompanyDetails.bind(accountController),
+      accountController.updateCompanyDetails,
     );
     this.server.put(
       '/update-vehicle-details',
       passport.authenticate('jwt', { session: false }),
-      accountController.updateVehicleDetails.bind(accountController),
+      accountController.updateVehicleDetails,
     );
     this.server.post('/driver-details', accountController.insertDriver);
     this.server.get('/account', passport.authenticate('jwt', { session: false }), accountController.getCurrentlyLoggedIn);
