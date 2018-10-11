@@ -19,7 +19,7 @@ import sendEmail from '../lib/email';
 const saltRounds = 10;
 const passwordResetSourceEmail = 'test@dav.network';
 const passwordResetSubject = 'Mooving password reset';
-const feAddress = process.env.appAddress || 'localhost:3000';
+const appAddress = process.env.appAddress || 'localhost:3000';
 
 interface IDriverDetails {
   phoneNumber: string;
@@ -200,7 +200,7 @@ export default class AccountController {
     const driver: IDriver = await findByEmail(request.query.email);
     if (!!driver) {
       const token = generateSignedToken(driver);
-      const passwordResetUrl = encodeURI(`http://${feAddress}/password-reset?token=${token}`);
+      const passwordResetUrl = encodeURI(`http://${appAddress}/password-reset?token=${token}`);
       const htmlContent = `link for <b>password</b> reset: ${passwordResetUrl}`;
       try {
         sendEmail(passwordResetSourceEmail, driver.email, passwordResetSubject, htmlContent);
