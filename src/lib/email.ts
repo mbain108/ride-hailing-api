@@ -1,5 +1,5 @@
-const API_KEY = process.env.MAILGUN_API_KEY;
-const DOMAIN = process.env.MAILGUN_DOMAIN;
+const API_KEY = process.env.MAILGUN_API_KEY || 'apiKey';
+const DOMAIN = process.env.MAILGUN_DOMAIN || 'dav.network';
 
 import * as mailgunService from 'mailgun-js';
 
