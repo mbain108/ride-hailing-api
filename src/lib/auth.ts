@@ -16,11 +16,6 @@ const jwtOptions = {
 
 export interface IRequestWithAuthentication extends Request {
   user: any;
-  /**
-   * Check passport.js authentication
-   */
-  isAuthenticated(): boolean;
-  login(driver: Drivers.IDriver, callback: (err: Error) => void): void;
 }
 
 passport.serializeUser<any, any>((user, done) => {
